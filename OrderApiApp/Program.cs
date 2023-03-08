@@ -26,10 +26,8 @@ app.MapGet("/client/all", async (HttpContext context,  IGenericRepository<Client
 });
 app.MapPost("/client/add", async (HttpContext context, IGenericRepository<OrderInfo> repository, OrderInfo orderInfo) => {
 
-    var result = await repository.CreateAsync(orderInfo);
-    if (result is null)
-        return new();
-    return result;
+    if (orderInfo is null) return new();
+    return await repository.CreateAsync(orderInfo);
 });
 app.MapPost("/client/update", (HttpContext context, IGenericRepository<Client> repository, Client client) =>
 {
@@ -52,10 +50,9 @@ app.MapGet("/product/all", async (HttpContext context, IGenericRepository<Produc
 });
 app.MapPost("/product/add", async (HttpContext context, IGenericRepository<Product> repository, Product product) => {
 
-    var result = await repository.CreateAsync(product);
-    if (result is null)
-        return new();
-    return result;
+    if(product is null) return new();
+    return  await repository.CreateAsync(product);
+    
 });
 app.MapPost("/product/update", (HttpContext context, IGenericRepository<Product> repository, Product product) =>
 {
@@ -78,16 +75,14 @@ app.MapGet("/order/all", async (HttpContext context, IGenericRepository<Order> o
 });
 app.MapPost("/order/add", async (HttpContext context, IGenericRepository<Order> repository, Order order) => {
 
-    var result = await repository.CreateAsync(order);
-    if (result is null)
-        return new();
-    return result;
+    if (order is null) return new();
+    return await repository.CreateAsync(order);
 });
 app.MapPost("/order/update", (HttpContext context, IGenericRepository<Order> repository, Order order) =>
 {
     repository.Update(order);
-    var student = repository.FindById(order.Id);
-    return student;
+    return repository.FindById(order.Id);
+    
 
 });
 app.MapDelete("/order/del/{id}", (HttpContext context, int id, IGenericRepository<Order> repository) =>
@@ -104,10 +99,8 @@ app.MapGet("/orderinfo/all", async (HttpContext context, IGenericRepository<Orde
 });
 app.MapPost("/orderinfo/add", async (HttpContext context, IGenericRepository<OrderInfo> repository, OrderInfo client) => {
 
-    var result = await repository.CreateAsync(client);
-    if (result is null)
-        return new();
-    return result;
+    if (client is null) return new();
+    return await repository.CreateAsync(client);
 });
 app.MapPost("/orderinfo/update", (HttpContext context, IGenericRepository<OrderInfo> repository, OrderInfo orderInfo) =>
 {
