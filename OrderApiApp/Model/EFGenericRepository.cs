@@ -33,8 +33,7 @@ namespace OrderApiApp.Model
             
                 await _dbSet.AddAsync(item);
                 _context.SaveChanges();
-           
-             
+                 return item;
         }
         public void Update(TEntity item)
         {
