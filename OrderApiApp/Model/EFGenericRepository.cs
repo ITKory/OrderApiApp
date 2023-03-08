@@ -30,12 +30,11 @@ namespace OrderApiApp.Model
 
         public async Task<TEntity?> CreateAsync(TEntity item)
         {
-            if (item is not null)
-            {
+            
                 await _dbSet.AddAsync(item);
                 _context.SaveChanges();
-            }
-            return item;
+           
+             
         }
         public void Update(TEntity item)
         {
