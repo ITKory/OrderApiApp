@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OrderApiApp;
+using OrderApiApp.Model;
 using OrderApiApp.Model.Entity;
 
-namespace OrderApiApp.Model
+namespace OrderApiApp.Service
 {
     public class EFGenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {

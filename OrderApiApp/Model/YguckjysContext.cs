@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using OrderApiApp.Model.Entity;
 
+
 namespace OrderApiApp.Model;
 
 public partial class YguckjysContext : DbContext
 {
     private readonly IConfiguration _config;
 
-    public YguckjysContext(IConfiguration configuration)
-    {
+    public YguckjysContext(IConfiguration configuration) {
         _config = configuration;
     }
 
@@ -77,7 +77,6 @@ public partial class YguckjysContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.ClientId).HasColumnName("client_id");
-            entity.Property(e => e.Description).HasColumnName("description");
 
             entity.HasOne(d => d.Client).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.ClientId)
@@ -119,6 +118,9 @@ public partial class YguckjysContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Article).HasColumnName("article");
+            entity.Property(e => e.Cost).HasColumnName("cost");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Image).HasColumnName("image");
             entity.Property(e => e.Name).HasColumnName("name");
         });
 

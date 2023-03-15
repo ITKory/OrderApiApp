@@ -1,4 +1,4 @@
-﻿namespace OrderApiApp.Model
+﻿namespace OrderApiApp.Service
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
