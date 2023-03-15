@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using OrderApiApp.Model.Entity;
 
 
@@ -8,15 +9,16 @@ namespace OrderApiApp.Model;
 
 public partial class YguckjysContext : DbContext
 {
-    private readonly IConfiguration _config;
+  
 
-    public YguckjysContext(IConfiguration configuration) {
-        _config = configuration;
+    public YguckjysContext( ) {
+         
     }
 
-    public YguckjysContext(DbContextOptions<YguckjysContext> options)
+    public YguckjysContext(DbContextOptions<YguckjysContext> options )
         : base(options)
     {
+       
     }
 
     public virtual DbSet<Client> Clients { get; set; }
@@ -28,7 +30,7 @@ public partial class YguckjysContext : DbContext
     public virtual DbSet<Product> Products { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(_config.GetConnectionString("DbConnectionString"));
+        => optionsBuilder.UseNpgsql("Host=fanny.db.elephantsql.com;Port=5432;Database=yguckjys;Username=yguckjys;Password=SuOoBEZFucsn0SseyrUBlpGK_N_exUGC");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

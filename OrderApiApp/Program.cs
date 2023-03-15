@@ -6,7 +6,7 @@ using System;
 using OrderApiApp.Service;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration["DbConnectionString"];
+//var connectionString = builder.Configuration["ConnectionStrings:DbConnectionString"];
 builder.Services.AddDbContext<YguckjysContext>();
 builder.Services.AddTransient<IGenericRepository<Client>, EFGenericRepository<Client>>();
 builder.Services.AddTransient<IGenericRepository<Order>, EFGenericRepository<Order>>();
@@ -19,7 +19,7 @@ builder.Services.AddTransient<IGenericRepository<Product>, EFGenericRepository<P
 
 var app = builder .Build();
 
-app.MapGet("/", () => connectionString);
+app.MapGet("/", () => "constr");
 
 //Client
 app.MapGet("/client/all", async (HttpContext context,  IGenericRepository<Client> client) =>
