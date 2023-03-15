@@ -9,8 +9,6 @@ public partial class Order
 
     public long ClientId { get; set; }
 
-    public string Description { get; set; } = null!;
-
     public virtual Client Client { get; set; } = null!;
 
     public virtual ICollection<OrderInfo> OrderInfos { get; } = new List<OrderInfo>();
