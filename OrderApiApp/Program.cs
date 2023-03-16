@@ -7,10 +7,10 @@ using OrderApiApp.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration["ConnectionStrings:DbConnectionString"];
-builder.Services.AddDbContext<YguckjysContext>();
+builder.Services.AddDbContext<FmjnwaqeContext>();
 builder.Services.AddTransient<IGenericRepository<Client>, EFGenericRepository<Client>>();
 builder.Services.AddTransient<IGenericRepository<Order>, EFGenericRepository<Order>>();
-builder.Services.AddTransient<IGenericRepository<OrderInfo>, EFGenericRepository<OrderInfo>>();
+builder.Services.AddTransient<IGenericRepository<Cart>, EFGenericRepository<Cart>>();
 builder.Services.AddTransient<IGenericRepository<Product>, EFGenericRepository<Product>>();
 
  
@@ -26,10 +26,10 @@ app.MapGet("/client/all", async (HttpContext context,  IGenericRepository<Client
 {
     return await client.GetAllAsync();
 });
-app.MapPost("/client/add", async (HttpContext context, IGenericRepository<OrderInfo> repository, OrderInfo orderInfo) => {
+app.MapPost("/client/add", async (HttpContext context, IGenericRepository<Client> repository, Client client) => {
 
-    if (orderInfo is null) return new();
-    return await repository.CreateAsync(orderInfo);
+    if (client is null) return new();
+    return await repository.CreateAsync(client);
 });
 app.MapPost("/client/update", (HttpContext context, IGenericRepository<Client> repository, Client client) =>
 {
@@ -95,28 +95,36 @@ app.MapDelete("/order/del/{id}", (HttpContext context, int id, IGenericRepositor
 
 });
 //OrderInfo
-app.MapGet("/orderinfo/all", async (HttpContext context, IGenericRepository<OrderInfo> orderInfo) =>
+app.MapGet("/orderinfo/all", async (HttpContext context, IGenericRepository<Cart> orderInfo) =>
 {
     return await orderInfo.GetAllAsync();
 });
-app.MapPost("/orderinfo/add", async (HttpContext context, IGenericRepository<OrderInfo> repository, OrderInfo client) => {
+app.MapPost("/orderinfo/add", async (HttpContext context, IGenericRepository<Cart> repository, Cart client) => {
 
     if (client is null) return new();
     return await repository.CreateAsync(client);
 });
-app.MapPost("/orderinfo/update", (HttpContext context, IGenericRepository<OrderInfo> repository, OrderInfo orderInfo) =>
+app.MapPost("/orderinfo/update", (HttpContext context, IGenericRepository<Cart> repository, Cart orderInfo) =>
 {
     repository.Update(orderInfo);
     return repository.FindById(orderInfo.Id);
     
 
 });
-app.MapDelete("/orderinfo/del/{id}", (HttpContext context, int id, IGenericRepository<OrderInfo> repository) =>
+app.MapDelete("/orderinfo/del/{id}", (HttpContext context, int id, IGenericRepository<Cart> repository) =>
 {
     var orderInfo = repository.FindById(id);
     if (orderInfo is not null)
         repository.Remove(orderInfo);
 
 });
+//cheque
+app.MapDelete("/order/cheque/{orderId}", (HttpContext context, int orderId, IGenericRepository<Cart> repository) => {
+ 
+});
+//client order
+app.MapGet("/order/{orderId}", (HttpContext context, int orderId, IGenericRepository<Cart> repository) => {
 
+   return repository.GetFullOrderInfo(orderId);
+});
 app.Run();

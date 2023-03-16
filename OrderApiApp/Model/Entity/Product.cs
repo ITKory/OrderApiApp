@@ -11,11 +11,11 @@ public partial class Product
 
     public string Article { get; set; } = null!;
 
-    public string? Image { get; set; }
+    public string Image { get; set; } = null!;
 
-    public long? Cost { get; set; }
+    public long Cost { get; set; }
 
-    public string? Description { get; set; }
+    public string Description { get; set; } = null!;
 
-    public virtual ICollection<OrderInfo> OrderInfos { get; } = new List<OrderInfo>();
+    public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

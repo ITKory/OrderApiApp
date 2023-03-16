@@ -2,15 +2,16 @@
 using OrderApiApp;
 using OrderApiApp.Model;
 using OrderApiApp.Model.Entity;
+using System.Collections;
 
 namespace OrderApiApp.Service
 {
     public class EFGenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        YguckjysContext _context;
+         FmjnwaqeContext  _context;
         DbSet<TEntity> _dbSet;
 
-        public EFGenericRepository(YguckjysContext context)
+        public EFGenericRepository( FmjnwaqeContext  context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
@@ -41,14 +42,15 @@ namespace OrderApiApp.Service
         {
             _context.Entry(item).State = EntityState.Modified;
             _context.SaveChanges();
-            
-          
-
         }
         public void Remove(TEntity item)
         {
             _dbSet.Remove(item);
             _context.SaveChanges();
+        }
+        public IEnumerable<Cart> GetFullOrderInfo(int id) {
+          var a =   _context.Carts.Select(o=>o).Where(o=>o.OrderId == id).ToList();
+            return a;
         }
 
     }

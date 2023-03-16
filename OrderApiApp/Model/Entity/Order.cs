@@ -7,9 +7,11 @@ public partial class Order
 {
     public long Id { get; set; }
 
-    public long ClientId { get; set; }
+    public long ProductId { get; set; }
 
-    public virtual Client Client { get; set; } = null!;
+    public long ProductCount { get; set; }
 
-    public virtual ICollection<OrderInfo> OrderInfos { get; } = new List<OrderInfo>();
+    public virtual ICollection<Cart> Carts { get; } = new List<Cart>();
+
+    public virtual Product Product { get; set; } = null!;
 }
