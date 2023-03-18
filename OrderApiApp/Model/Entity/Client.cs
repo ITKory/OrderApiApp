@@ -9,5 +9,5 @@ public partial class Client
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<Cart> Carts { get; } = new List<Cart>();
+ 
 }

@@ -8,12 +8,10 @@ namespace OrderApiApp.Model;
 public partial class FmjnwaqeContext : DbContext
 {
     private readonly IConfiguration _config;
-    public FmjnwaqeContext(IConfiguration configuration)
-    {
+    public FmjnwaqeContext(IConfiguration configuration) {
         _config = configuration;
     }
 
- 
 
     public virtual DbSet<Cart> Carts { get; set; }
 
@@ -24,7 +22,7 @@ public partial class FmjnwaqeContext : DbContext
     public virtual DbSet<Product> Products { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql( _config.GetConnectionString("DbConnectionString"));
+   => optionsBuilder.UseNpgsql(_config.GetConnectionString("DbConnectionString"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -57,21 +55,11 @@ public partial class FmjnwaqeContext : DbContext
 
             entity.ToTable("cart");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ClientId).HasColumnName("client_id");
             entity.Property(e => e.OrderId).HasColumnName("order_id");
 
-            entity.HasOne(d => d.Client).WithMany(p => p.Carts)
-                .HasForeignKey(d => d.ClientId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("cart_client_id_foreign");
-
-            entity.HasOne(d => d.Order).WithMany(p => p.Carts)
-                .HasForeignKey(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("cart_order_id_foreign");
+          
         });
 
         modelBuilder.Entity<Client>(entity =>
@@ -80,9 +68,7 @@ public partial class FmjnwaqeContext : DbContext
 
             entity.ToTable("client");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name).HasColumnName("name");
         });
 
@@ -92,16 +78,10 @@ public partial class FmjnwaqeContext : DbContext
 
             entity.ToTable("order");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ProductCount).HasColumnName("product_count");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("order_product_id_foreign");
+ 
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -110,9 +90,7 @@ public partial class FmjnwaqeContext : DbContext
 
             entity.ToTable("product");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Article).HasColumnName("article");
             entity.Property(e => e.Cost).HasColumnName("cost");
             entity.Property(e => e.Description).HasColumnName("description");

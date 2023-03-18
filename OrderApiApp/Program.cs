@@ -6,7 +6,6 @@ using System;
 using OrderApiApp.Service;
 
 var builder = WebApplication.CreateBuilder(args);
-//var connectionString = builder.Configuration["ConnectionStrings:DbConnectionString"];
 builder.Services.AddDbContext<FmjnwaqeContext>();
 builder.Services.AddTransient<IGenericRepository<Client>, EFGenericRepository<Client>>();
 builder.Services.AddTransient<IGenericRepository<Order>, EFGenericRepository<Order>>();
@@ -14,12 +13,29 @@ builder.Services.AddTransient<IGenericRepository<Cart>, EFGenericRepository<Cart
 builder.Services.AddTransient<IGenericRepository<Product>, EFGenericRepository<Product>>();
 
  
-
-
-
 var app = builder .Build();
 
-app.MapGet("/", () => "constr");
+app.MapGet("/", () => "" +
+"/client/all\n" +
+"/client/add\n" +
+"/client/update\n" +
+"/client/del/{id}\n" +
+"/product/all\n" +
+"/product/add\n" +
+"/product/update\n" +
+"/product/del/{id}\n" +
+"/order/all\n" +
+"/order/{clientId}/add\n" +
+"/order/update\n" +
+"/order/del/{id}\n" +
+"/cart/all\n" +
+"/cart/add\n" +
+"/cart/update\n" +
+"/cart/del/{id}\n" +
+"/cheque/{clientId}\n" +
+"/order/{orderId}\n"
+
+);
 
 //Client
 app.MapGet("/client/all", async (HttpContext context,  IGenericRepository<Client> client) =>
@@ -71,59 +87,59 @@ app.MapDelete("/product/del/{id}", (HttpContext context, int id, IGenericReposit
 
 });
 //Order
-app.MapGet("/order/all", async (HttpContext context, IGenericRepository<Order> order) =>
+app.MapGet("/order/all",  (HttpContext context, IGenericRepository<Order> repository) =>
 {
-    return await order.GetAllAsync();
+    return repository.GetAllOrders();
 });
-app.MapPost("/order/add", async (HttpContext context, IGenericRepository<Order> repository, Order order) => {
+app.MapPost("/order/{clientId}/add", async (HttpContext context, IGenericRepository<Order> repository, int clientId, Order order) => {
 
     if (order is null) return new();
-    return await repository.CreateAsync(order);
+    var newOrder = await repository.CreateAsync(order);
+    repository.CreateCart(clientId, newOrder);
+    return order;
 });
 app.MapPost("/order/update", (HttpContext context, IGenericRepository<Order> repository, Order order) =>
 {
     repository.Update(order);
     return repository.FindById(order.Id);
-    
-
+   
 });
 app.MapDelete("/order/del/{id}", (HttpContext context, int id, IGenericRepository<Order> repository) =>
 {
-    var order = repository.FindById(id);
-    if (order is not null)
-        repository.Remove(order);
+    repository.DeleteOrder(id);
 
 });
 //OrderInfo
-app.MapGet("/orderinfo/all", async (HttpContext context, IGenericRepository<Cart> orderInfo) =>
+app.MapGet("/cart/all", async (HttpContext context, IGenericRepository<Cart> orderInfo) =>
 {
     return await orderInfo.GetAllAsync();
 });
-app.MapPost("/orderinfo/add", async (HttpContext context, IGenericRepository<Cart> repository, Cart client) => {
+app.MapPost("/cart/add", async (HttpContext context, IGenericRepository<Cart> repository, Cart client) => {
 
     if (client is null) return new();
     return await repository.CreateAsync(client);
 });
-app.MapPost("/orderinfo/update", (HttpContext context, IGenericRepository<Cart> repository, Cart orderInfo) =>
+app.MapPost("/cart/update", (HttpContext context, IGenericRepository<Cart> repository, Cart cart) =>
 {
-    repository.Update(orderInfo);
-    return repository.FindById(orderInfo.Id);
+    repository.Update(cart);
+    return repository.FindById(cart.Id);
     
 
 });
-app.MapDelete("/orderinfo/del/{id}", (HttpContext context, int id, IGenericRepository<Cart> repository) =>
+app.MapDelete("/cart/del/{id}", (HttpContext context, int id, IGenericRepository<Cart> repository) =>
 {
     var orderInfo = repository.FindById(id);
     if (orderInfo is not null)
         repository.Remove(orderInfo);
 
 });
+
 //cheque
-app.MapDelete("/order/cheque/{orderId}", (HttpContext context, int orderId, IGenericRepository<Cart> repository) => {
- 
+app.MapGet("/cheque/{clientId}", (HttpContext context, int clientId, IGenericRepository<Cart> repository) => {
+    return repository.GetCheque(0);
 });
 //client order
-app.MapGet("/order/{orderId}", (HttpContext context, int orderId, IGenericRepository<Cart> repository) => {
+app.MapGet("/order/{orderId}", (HttpContext context, int orderId, IGenericRepository<Order> repository) => {
 
    return repository.GetFullOrderInfo(orderId);
 });

@@ -9,6 +9,12 @@ namespace OrderApiApp.Service
         TEntity FindById(long id);
         void Remove(TEntity item);
         void Update(TEntity item);
+        IEnumerable<TEntity> Get(Func<TEntity, bool> predicate);
         IEnumerable<Cart> GetFullOrderInfo(int id);
+        Cheque GetCheque(int clientId);
+        public void DeleteOrder(int id);
+        public IEnumerable<Order> GetAllOrders();
+        public   Cart CreateCart(int clientId, Order order);
+
     }
 }
