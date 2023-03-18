@@ -8,7 +8,7 @@ public partial class Cart
     public long Id { get; set; }
 
     public long OrderId { get; set; }
-
+    
     public long ClientId { get; set; }
 
     public virtual Client Client { get; set; } = null!;

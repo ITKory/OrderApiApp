@@ -17,5 +17,5 @@ public partial class Product
 
     public string Description { get; set; } = null!;
 
-    public virtual ICollection<Order> Orders { get; } = new List<Order>();
+
 }

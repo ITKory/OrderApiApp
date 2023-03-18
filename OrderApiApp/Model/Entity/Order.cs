@@ -11,7 +11,5 @@ public partial class Order
 
     public long ProductCount { get; set; }
 
-    public virtual ICollection<Cart> Carts { get; } = new List<Cart>();
-
     public virtual Product Product { get; set; } = null!;
 }
