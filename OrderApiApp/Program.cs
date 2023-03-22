@@ -4,16 +4,49 @@ using Microsoft.Extensions.DependencyInjection;
 using OrderApiApp.Model.Entity;
 using System;
 using OrderApiApp.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+ 
+using OrderApiApp.Service.Auth;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters {
+            // указывает, будет ли валидироваться издатель при валидации токена
+            ValidateIssuer = true,
+            // строка, представляющая издателя
+            ValidIssuer = AuthOption.ISSUER,
+            // будет ли валидироваться потребитель токена
+            ValidateAudience = true,
+            // установка потребителя токена
+            ValidAudience = AuthOption.AUDIENCE,
+            // будет ли валидироваться время существования
+            ValidateLifetime = true,
+            // установка ключа безопасности
+            IssuerSigningKey = AuthOption.GetSymmetricSecurityKey(),
+            // валидация ключа безопасности
+            ValidateIssuerSigningKey = true,
+        };
+    });
+
+
 builder.Services.AddDbContext<FmjnwaqeContext>();
 builder.Services.AddTransient<IGenericRepository<Client>, EFGenericRepository<Client>>();
 builder.Services.AddTransient<IGenericRepository<Order>, EFGenericRepository<Order>>();
 builder.Services.AddTransient<IGenericRepository<Cart>, EFGenericRepository<Cart>>();
 builder.Services.AddTransient<IGenericRepository<Product>, EFGenericRepository<Product>>();
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();   
 
  
 var app = builder .Build();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("/", () => "" +
 "/client/all\n" +
@@ -87,7 +120,7 @@ app.MapDelete("/product/del/{id}", (HttpContext context, int id, IGenericReposit
 
 });
 //Order
-app.MapGet("/order/all",  (HttpContext context, IGenericRepository<Order> repository) =>
+app.MapGet("/order/all",  (HttpContext context, IOrderRepository repository) =>
 {
     return repository.GetAllOrders();
 });
@@ -104,7 +137,7 @@ app.MapPost("/order/update", (HttpContext context, IGenericRepository<Order> rep
     return repository.FindById(order.Id);
    
 });
-app.MapDelete("/order/del/{id}", (HttpContext context, int id, IGenericRepository<Order> repository) =>
+app.MapDelete("/order/del/{id}", (HttpContext context, int id, IOrderRepository repository) =>
 {
     repository.DeleteOrder(id);
 
@@ -143,4 +176,18 @@ app.MapGet("/order/{orderId}", (HttpContext context, int orderId, IGenericReposi
 
    return repository.GetFullOrderInfo(orderId);
 });
+//Auth
+app.Map("/login/{username}", (string username) => {
+    var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
+    var jwt = new JwtSecurityToken(
+            issuer: AuthOption.ISSUER,
+            audience: AuthOption.AUDIENCE,
+    claims: claims,
+    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
+            signingCredentials: new SigningCredentials(AuthOption.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+    return new JwtSecurityTokenHandler().WriteToken(jwt);
+});
+app.Map("/data", [Authorize] (HttpContext context) => $"Hello World!");
 app.Run();
+          

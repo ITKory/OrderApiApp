@@ -8,8 +8,8 @@ namespace OrderApiApp.Service
 {
     public class EFGenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-         FmjnwaqeContext  _context;
-        DbSet<TEntity> _dbSet;
+        protected  FmjnwaqeContext  _context;
+        protected  DbSet<TEntity> _dbSet;
 
         public EFGenericRepository( FmjnwaqeContext  context)
         {
@@ -63,14 +63,7 @@ namespace OrderApiApp.Service
             _context.SaveChanges();
             return cart;
         }
-        public void DeleteOrder(int id) {
-          var cart =  _context.Carts.First(cart => cart.OrderId == id);
-            _context.Carts.Remove(cart);
-           var order =  _context.Orders.First(order => order.Id == id);
-            _context.Orders.Remove(order);
-            _context.SaveChanges();
-        
-        }
+     
         public Cheque GetCheque(int clientId) {
             var orders = _context.Carts
                 .Include(cart => cart.Order)
@@ -84,9 +77,7 @@ namespace OrderApiApp.Service
                 
             };
         }
-        public IEnumerable<Order>  GetAllOrders() {
-            return _context.Orders.Include(o => o.Product);
-        }
+   
 
     }
 }

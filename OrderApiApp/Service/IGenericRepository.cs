@@ -12,8 +12,6 @@ namespace OrderApiApp.Service
         IEnumerable<TEntity> Get(Func<TEntity, bool> predicate);
         IEnumerable<Cart> GetFullOrderInfo(int id);
         Cheque GetCheque(int clientId);
-        public void DeleteOrder(int id);
-        public IEnumerable<Order> GetAllOrders();
         public   Cart CreateCart(int clientId, Order order);
 
     }
