@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  orderapiapp:
+    image: ${DOCKER_REGISTRY-}orderapiapp
+    build:
+      context: .
+      dockerfile: OrderApiApp/Dockerfile
